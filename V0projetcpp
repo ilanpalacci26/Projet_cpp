@@ -1,0 +1,4 @@
+git clone 
+git add . ou git add fichier
+git commit -m "commentaire"
+git push
