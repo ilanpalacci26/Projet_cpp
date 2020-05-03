@@ -4,12 +4,9 @@ using namespace std ;
 
 void InitTab (float *tab,int tailleTAB){
   tab = new float[tailleTAB];
-  float * p = tab ;
-  int i ;
-  for(i =0 ; i<tailleTAB ; i++ ){
-     *p = 0 ;
-    p++ ;
-    }
+  for(int i = 0; i < tailleTAB; i++){
+     tab[i] = 0;
+   }
   }
 
 
@@ -20,12 +17,13 @@ void DeclarationTab(float *tab , int tailleTAB) {
     }
 
 void AfficherTab(float *tab,int tailleTAB){
-      float * p = tab ;
       int i ;
-      for(i =0 ; i<tailleTAB ; i++ ){
-        std::cout << *p << "\n" ;
-        p++ ;
+      std::cout << "( " ;
+      for(i =0 ; i< (tailleTAB-1) ; i++ ){
+        std::cout << tab[i] << " ; " ;
       }
+      std::cout << tab[i] ;
+      std::cout << " ) \n" ;
     }
 
 void RemplirTab(float *tab , int tailleTAB){
