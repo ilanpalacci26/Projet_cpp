@@ -16,7 +16,7 @@ void Vecteur::affiche(){
 
 Vecteur::Vecteur(){ //constructeur
   dim = 2 ;
-  delete tab ;
+//  delete tab ;
   tab = new float[dim];
   for(int i = 0; i < dim; i++){
      tab[i] = 0;
@@ -25,7 +25,7 @@ Vecteur::Vecteur(){ //constructeur
 
 Vecteur::Vecteur(int tailleTAB){ //constructeur
   dim = tailleTAB ;
-  delete tab ;
+//  delete tab ;
   tab = new float[dim];
   for(int i = 0; i < dim; i++){
      tab[i] = 0;
@@ -35,7 +35,7 @@ Vecteur::Vecteur(int tailleTAB){ //constructeur
 
 Vecteur::Vecteur(float* vec ,int tailleTAB){ //constructeur
   dim = tailleTAB ;
-  delete tab ;
+//  delete tab ;
   tab = new float[dim];
   for(int i = 0; i < dim; i++){// Idée : faire un catch si segfault ?
      tab[i] = vec[i];
@@ -45,7 +45,7 @@ Vecteur::Vecteur(float* vec ,int tailleTAB){ //constructeur
 
 Vecteur::Vecteur(const Vecteur &t){
   dim = t.dim ;
-  delete tab ;
+//  delete tab ;
   tab = new float[dim];
   for(int i = 0; i < dim; i++){// Idée : faire un catch si segfault ?
      tab[i] = t.tab[i];
@@ -53,7 +53,7 @@ Vecteur::Vecteur(const Vecteur &t){
 }
 
 Vecteur::~Vecteur(){
-  delete  tab ;
+  //delete  tab ;
   dim = 0 ;
 }
 
@@ -70,28 +70,30 @@ Vecteur& Vecteur::operator=(const Vecteur &t){
     }
   return *this;
   }
+//------------------ Surdefinition --------------
 
-
-Vecteur& operator+(Vecteur const &t1,Vecteur const  &t2){
-    int dim = t1.dim ;
-    float *tab = new float[dim];
-    for(int i = 0; i < dim; i++){// Idée : faire un catch si segfault ?
-       tab[i] = t1.tab[i]+t2.tab[i];
+Vecteur operator+(const Vecteur & t1, const Vecteur & t2){
+    int Newdim = t1.dim ;
+    float *Newtab = new float[Newdim];
+    for(int i = 0; i < Newdim; i++){// Idée : faire un catch si segfault ?
+       Newtab[i] = t1.tab[i]+t2.tab[i];
      }
-    Vecteur a(tab,dim) ;
-  return &a ;
+    Vecteur a(Newtab,Newdim) ;
+  return a ;
   }
 
-/*
-Vecteur& Vecteur::operator-(const Vecteur &t1,const Vecteur &t2){
-  if (t1.dim== t2.dim){
-    delete tab ;
-    dim = t1.dim ;
-    tab = new float[dim];
-    for(int i = 0; i < dim; i++){// Idée : faire un catch si segfault ?
-       tab[i] = t1[i]-t2[i];
+
+Vecteur operator-(const Vecteur & t1, const Vecteur & t2){
+    int Newdim = t1.dim ;
+    float *Newtab = new float[Newdim];
+    for(int i = 0; i < Newdim; i++){// Idée : faire un catch si segfault ?
+       Newtab[i] = t1.tab[i]-t2.tab[i];
      }
+    Vecteur a(Newtab,Newdim) ;
+    return a ;
     }
-  return *this;
-  }
-*/
+
+
+float& Vecteur::operator[](int i){
+  return tab[i] ;
+}
