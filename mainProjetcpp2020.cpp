@@ -13,13 +13,15 @@
 int main(int argc, char const *argv[]) {
   float a[3] = {1,2,3} ;
   Vecteur test(a,3) ;
-  test.affiche() ;
-  Vecteur b = test ;
-  b.affiche() ;
+  Vecteur b = test
   Vecteur c  ;
-//  c = test+b ;
-  c.affiche() ;
-
+  c = test+b ;
+  Vecteur d= c-b-b ;
+  d[1] = 5 ;
+  Vecteur e = d.subvec(1,2) ;
+  Vecteur g  = b.dot(test) ;
+  Vecteur h = g.norm() ;
+  (g*4).affiche() ;
 
  return 0 ;
 

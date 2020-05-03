@@ -7,11 +7,6 @@
 
 // ****************** fonctions en lien avec la classe vecteur ******************
 
-void Vecteur::affiche(){
-  std::cout << "\n\nC'est un vecteur de R^" << dim ;
-  std::cout << "\nVoici ses coordonnées\n" ;
-  AfficherTab(tab,dim) ;
-}
 // ------------------- Constructeur , Destructeur -------------------
 
 Vecteur::Vecteur(){ //constructeur
@@ -57,11 +52,11 @@ Vecteur::~Vecteur(){
   dim = 0 ;
 }
 
-// ------------------- surdefinition -------------------
+// ------------------- surdefinition Membre-------------------
 
 Vecteur& Vecteur::operator=(const Vecteur &t){
   if (this!=&t){
-    delete tab ;
+    delete[] tab ;
     dim = t.dim ;
     tab = new float[dim];
     for(int i=0;i<dim;i++){
@@ -70,9 +65,15 @@ Vecteur& Vecteur::operator=(const Vecteur &t){
     }
   return *this;
   }
-//------------------ Surdefinition --------------
 
+  float& Vecteur::operator[](int i){
+    return tab[i] ;
+  }
+//------------------ Surdefinition friend--------------
+
+//******Attention pas fonction friend******
 Vecteur operator+(const Vecteur & t1, const Vecteur & t2){
+    if(t1.dim != t2.dim) { std::cout<<"ERREUR taille differente, fonction :  "<<__func__ ; return Vecteur() ;  }
     int Newdim = t1.dim ;
     float *Newtab = new float[Newdim];
     for(int i = 0; i < Newdim; i++){// Idée : faire un catch si segfault ?
@@ -82,8 +83,8 @@ Vecteur operator+(const Vecteur & t1, const Vecteur & t2){
   return a ;
   }
 
-
 Vecteur operator-(const Vecteur & t1, const Vecteur & t2){
+    if(t1.dim != t2.dim) { std::cout<<"ERREUR taille differente, fonction :  "<<__func__ ; return Vecteur() ;  }
     int Newdim = t1.dim ;
     float *Newtab = new float[Newdim];
     for(int i = 0; i < Newdim; i++){// Idée : faire un catch si segfault ?
@@ -94,6 +95,53 @@ Vecteur operator-(const Vecteur & t1, const Vecteur & t2){
     }
 
 
-float& Vecteur::operator[](int i){
-  return tab[i] ;
+Vecteur operator*(const Vecteur & t1, float l){
+      int Newdim = t1.dim ;
+      float *Newtab = new float[Newdim];
+      for(int i = 0; i < Newdim; i++){// Idée : faire un catch si segfault ?
+         Newtab[i] = t1.tab[i]*l;
+       }
+      Vecteur a(Newtab,Newdim) ;
+      return a ;
+}
+
+    //------------------ fonction Vecteur--------------
+
+void Vecteur::affiche(){
+  std::cout << "\n\nC'est un vecteur de R^" << dim ;
+  std::cout << "\nVoici ses coordonnées\n" ;
+  AfficherTab(tab,dim) ;
+}
+
+Vecteur Vecteur::subvec(int i, int j){
+  i=i-1 ; j=j-1 ; //On veut que l'utilisateur entre 1 comme premiere coordonnée
+  if (j<i){int tmp = i; i = j ; j = tmp ; }
+  if(i<0){
+    std::cout<<"attention valeur < 1 non indexé Valeur 1 par default attribué"<<std::endl ; // 1:referenciel utilisateur
+    i=0 ; }
+  if(j> dim ) { // dans ce cas
+    j=dim ;
+    std::cout<< "attention la taille du vecteur est"<<dim <<std::endl ; } // on ne prendra pas pour une erreur
+  int Newdim = (j-i)+1 ;
+  float*Newtab = new float[Newdim];
+  for(int k = i; k < (j+1); k++){// Idée : faire un catch si segfault ?
+    Newtab[k] = tab[k];
+   }
+  return Vecteur(Newtab,Newdim) ;
+}
+
+//******Attention pas fonction friend******
+Vecteur Vecteur::dot(const Vecteur & t1){
+    float *sum = new float[1]  ; // je souhaite initialiser un pointeur dont la taille dependra de son initialisation
+    if(t1.dim != dim) { std::cout<<"ERREUR taille differente, fonction :  "<<__func__ ; return Vecteur() ;  }
+    for (int i=0;i<t1.dim;i++){ sum[0] += t1.tab[i]*tab[i]; }
+    return Vecteur(sum,1) ;
+
+}
+
+Vecteur Vecteur::norm(){
+    float *sum = new float[1]  ;
+    for (int i=0;i<dim;i++){ sum[0] += tab[i]*tab[i]; }
+    return Vecteur(sum,1) ;
+
 }
