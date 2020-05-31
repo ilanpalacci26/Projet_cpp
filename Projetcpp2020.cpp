@@ -2,6 +2,8 @@
 #include <iostream>
 #include "Projetcpp2020.h"
 #include "functionTab2020.h"
+#include "tenseur2_2020.h"
+
 //probleme1 : InitTab ne fonctionne pas il semble que l'adresse se perd
 
 
@@ -10,7 +12,7 @@
 // ------------------- Constructeur , Destructeur -------------------
 
 Vecteur::Vecteur(){ //constructeur
-  dim = 2 ;
+  dim = 1 ;
 //  delete tab ;
   tab = new float[dim];
   for(int i = 0; i < dim; i++){
@@ -67,6 +69,7 @@ Vecteur& Vecteur::operator=(const Vecteur &t){
   }
 
   float& Vecteur::operator[](int i){
+    i = i-1 ; 
     return tab[i] ;
   }
 //------------------ Surdefinition friend--------------
@@ -108,8 +111,8 @@ Vecteur operator*(const Vecteur & t1, float l){
     //------------------ fonction Vecteur--------------
 
 void Vecteur::affiche(){
-  std::cout << "\n\nC'est un vecteur de R^" << dim ;
-  std::cout << "\nVoici ses coordonnées\n" ;
+//  std::cout << "\n\nC'est un vecteur de R^" << dim ;
+//  std::cout << "\nVoici ses coordonnées\n" ;
   AfficherTab(tab,dim) ;
 }
 
@@ -131,17 +134,21 @@ Vecteur Vecteur::subvec(int i, int j){
 }
 
 //******Attention pas fonction friend******
-Vecteur Vecteur::dot(const Vecteur & t1){
-    float *sum = new float[1]  ; // je souhaite initialiser un pointeur dont la taille dependra de son initialisation
-    if(t1.dim != dim) { std::cout<<"ERREUR taille differente, fonction :  "<<__func__ ; return Vecteur() ;  }
-    for (int i=0;i<t1.dim;i++){ sum[0] += t1.tab[i]*tab[i]; }
-    return Vecteur(sum,1) ;
+float Vecteur::dot(const Vecteur & t1){
+        float sum =0 ; // je souhaite initialiser un pointeur dont la taille dependra de son initialisation
+    if(t1.dim != dim) { std::cout<<"ERREUR taille differente, fonction :  "<<__func__ ; return 0 ;  }
+    for (int i=0;i<t1.dim;i++){ sum += t1.tab[i]*tab[i]; }
+    return sum ;
 
 }
 
-Vecteur Vecteur::norm(){
-    float *sum = new float[1]  ;
-    for (int i=0;i<dim;i++){ sum[0] += tab[i]*tab[i]; }
-    return Vecteur(sum,1) ;
+float Vecteur::norm(){
+    float sum =0 ;
+    for (int i=0;i<dim;i++){ sum += tab[i]*tab[i]; }
+    return sum ; // a mettre a la racine
 
+}
+
+int Vecteur::getdim(){
+  return dim ;
 }
