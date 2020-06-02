@@ -21,8 +21,9 @@ public:
   float dot(const Vecteur & ) ;
   float norm() ;
   void affiche() ;
-  int getdim() ;
 
-  friend class Matrice ; 
+  friend class Matrice ;
+
+  friend Vecteur householder(Vecteur x , float* beta ) ;
 
 } ;

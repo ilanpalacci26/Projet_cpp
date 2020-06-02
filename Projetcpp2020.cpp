@@ -1,8 +1,10 @@
 #include <cmath>
 #include <iostream>
+
 #include "Projetcpp2020.h"
 #include "functionTab2020.h"
 #include "tenseur2_2020.h"
+#include "PartieIII_2020.h"
 
 //probleme1 : InitTab ne fonctionne pas il semble que l'adresse se perd
 
@@ -50,8 +52,8 @@ Vecteur::Vecteur(const Vecteur &t){
 }
 
 Vecteur::~Vecteur(){
-  //delete  tab ;
   dim = 0 ;
+  delete [] tab ;
 }
 
 // ------------------- surdefinition Membre-------------------
@@ -69,7 +71,7 @@ Vecteur& Vecteur::operator=(const Vecteur &t){
   }
 
   float& Vecteur::operator[](int i){
-    i = i-1 ; 
+    i = i-1 ;
     return tab[i] ;
   }
 //------------------ Surdefinition friend--------------
@@ -113,18 +115,24 @@ Vecteur operator*(const Vecteur & t1, float l){
 void Vecteur::affiche(){
 //  std::cout << "\n\nC'est un vecteur de R^" << dim ;
 //  std::cout << "\nVoici ses coordonnées\n" ;
-  AfficherTab(tab,dim) ;
+  int i ;
+  std::cout << "( " ;
+  for(i =0 ; i< (dim-1) ; i++ ){
+    std::cout << tab[i] << " ; " ;
+  }
+  std::cout << tab[i] ;
+  std::cout << " ) \n" ;
 }
 
 Vecteur Vecteur::subvec(int i, int j){
   i=i-1 ; j=j-1 ; //On veut que l'utilisateur entre 1 comme premiere coordonnée
   if (j<i){int tmp = i; i = j ; j = tmp ; }
   if(i<0){
-    std::cout<<"attention valeur < 1 non indexé Valeur 1 par default attribué"<<std::endl ; // 1:referenciel utilisateur
+    std::cout<<"attention valeur < 1 non indexé Valeur 1 par default attribué"<<__func__ <<std::endl ; // 1:referenciel utilisateur
     i=0 ; }
   if(j> dim ) { // dans ce cas
     j=dim ;
-    std::cout<< "attention la taille du vecteur est"<<dim <<std::endl ; } // on ne prendra pas pour une erreur
+    std::cout<< "attention la taille du vecteur est"<<dim <<__func__ <<std::endl ; } // on ne prendra pas pour une erreur
   int Newdim = (j-i)+1 ;
   float*Newtab = new float[Newdim];
   for(int k = i; k < (j+1); k++){// Idée : faire un catch si segfault ?
@@ -135,7 +143,7 @@ Vecteur Vecteur::subvec(int i, int j){
 
 //******Attention pas fonction friend******
 float Vecteur::dot(const Vecteur & t1){
-        float sum =0 ; // je souhaite initialiser un pointeur dont la taille dependra de son initialisation
+    float sum =0 ; // je souhaite initialiser un pointeur dont la taille dependra de son initialisation
     if(t1.dim != dim) { std::cout<<"ERREUR taille differente, fonction :  "<<__func__ ; return 0 ;  }
     for (int i=0;i<t1.dim;i++){ sum += t1.tab[i]*tab[i]; }
     return sum ;
@@ -145,10 +153,6 @@ float Vecteur::dot(const Vecteur & t1){
 float Vecteur::norm(){
     float sum =0 ;
     for (int i=0;i<dim;i++){ sum += tab[i]*tab[i]; }
-    return sum ; // a mettre a la racine
+    return sqrt(sum) ; // a mettre a la racine
 
-}
-
-int Vecteur::getdim(){
-  return dim ;
 }
