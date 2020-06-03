@@ -116,17 +116,18 @@ void Vecteur::affiche(){
 //  std::cout << "\n\nC'est un vecteur de R^" << dim ;
 //  std::cout << "\nVoici ses coordonnées\n" ;
   int i ;
-  std::cout << "( " ;
+  std::cout << " | " ;
   for(i =0 ; i< (dim-1) ; i++ ){
     std::cout << tab[i] << " ; " ;
   }
   std::cout << tab[i] ;
-  std::cout << " ) \n" ;
+  std::cout << " | \n" ;
 }
 
 Vecteur Vecteur::subvec(int i, int j){
   i=i-1 ; j=j-1 ; //On veut que l'utilisateur entre 1 comme premiere coordonnée
-  if (j<i){int tmp = i; i = j ; j = tmp ; }
+  if (j<i){return( Vecteur(1) ) ; }
+  if(i>dim){ return(Vecteur(1)) ;}
   if(i<0){
     std::cout<<"attention valeur < 1 non indexé Valeur 1 par default attribué"<<__func__ <<std::endl ; // 1:referenciel utilisateur
     i=0 ; }
@@ -134,11 +135,11 @@ Vecteur Vecteur::subvec(int i, int j){
     j=dim ;
     std::cout<< "attention la taille du vecteur est"<<dim <<__func__ <<std::endl ; } // on ne prendra pas pour une erreur
   int Newdim = (j-i)+1 ;
-  float*Newtab = new float[Newdim];
+  Vecteur v = Vecteur(Newdim) ;
   for(int k = i; k < (j+1); k++){// Idée : faire un catch si segfault ?
-    Newtab[k] = tab[k];
+    v.tab[k-i] = tab[k];
    }
-  return Vecteur(Newtab,Newdim) ;
+  return v ;
 }
 
 //******Attention pas fonction friend******

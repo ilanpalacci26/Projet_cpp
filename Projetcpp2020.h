@@ -26,4 +26,5 @@ public:
 
   friend Vecteur householder(Vecteur x , float* beta ) ;
 
+
 } ;

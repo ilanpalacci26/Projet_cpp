@@ -20,7 +20,7 @@ void AfficherTab(float *tab,int tailleTAB){
       int i ;
       std::cout << "( " ;
       for(i =0 ; i< (tailleTAB-1) ; i++ ){
-        std::cout << tab[i] << " ; " ;
+        std::cout << tab[i] << "   ; " ;
       }
       std::cout << tab[i] ;
       std::cout << " ) \n" ;

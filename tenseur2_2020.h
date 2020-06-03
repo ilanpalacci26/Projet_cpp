@@ -28,5 +28,8 @@ public:
   static Matrice outer(Vecteur, Vecteur) ;
 
   friend Matrice reductridiag(Matrice *) ;
+//partie 3 optionnelle
+  void copiesousmatricecarre(Matrice ,int ) ;
+  static Matrice Identity(int ) ; 
 
 } ;
