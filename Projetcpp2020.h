@@ -26,5 +26,6 @@ public:
 
   friend Vecteur householder(Vecteur x , float* beta ) ;
 
+  friend float vmax(Vecteur v) ; 
 
 } ;

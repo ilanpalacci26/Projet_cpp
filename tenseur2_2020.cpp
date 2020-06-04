@@ -125,9 +125,11 @@ Matrice Matrice::operator*(const Matrice &m1){
   int newdims0 = dims[0] ;
   int newdims1 = m1.dims[1] ;
   Matrice mnew(dims[0],m1.dims[1]) ;
+  Matrice m1t = m1 ;
+  m1t = m1t.transpose() ;
   for(int i = 0; i<dims[0] ; i++){
     for(int j=0 ; j<m1.dims[1] ; j++)
-    mnew[i+1][j+1] = mat[i].dot(m1.mat[j])  ; // indice decalé
+    mnew[i+1][j+1] = mat[i].dot(m1t.mat[j])  ; // indice decalé
   }
   return mnew ;
 }
@@ -165,6 +167,7 @@ Matrice Matrice::submat(int il, int jl, int ic , int jc){
   int dims1 = jc-ic+1 ;
   Matrice newm(dims0,dims1) ;
   for(int i=0 ; i<dims0 ; i++){
+
     newm[i+1] = mat[i+il-1].subvec(ic,jc) ; //-1 car mat est la matrice directement
   }
   return newm ;
@@ -210,4 +213,15 @@ Matrice Matrice::Identity(int n) {
     I[i+1][i+1] = 1 ;
  }
  return I ;
+}
+
+float verifdiagonal(Matrice A) {
+  float verif ;
+  for(int i(1) ; i<(A.dims[0]+1) ; i++ ){
+    A[i][i] = 0 ;
+  }
+  verif = A.norm() ;
+  if(verif < pow(10,-9)){
+    verif = 0 ; }
+  return verif ;
 }

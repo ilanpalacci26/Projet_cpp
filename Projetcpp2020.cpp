@@ -157,3 +157,11 @@ float Vecteur::norm(){
     return sqrt(sum) ; // a mettre a la racine
 
 }
+float vmax(Vecteur v){
+  float max = v[1] ;
+  for(int i =1 ;i<v.dim){
+      if(v[i]>max){max=v[i] ; }
+    }
+
+return max ;
+}

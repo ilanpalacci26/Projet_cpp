@@ -30,6 +30,8 @@ public:
   friend Matrice reductridiag(Matrice *) ;
 //partie 3 optionnelle
   void copiesousmatricecarre(Matrice ,int ) ;
-  static Matrice Identity(int ) ; 
+  static Matrice Identity(int ) ;
 
+  friend Matrice qrpivot(Matrice , Matrice *);
+  friend float verifdiagonal(Matrice A) ; 
 } ;
