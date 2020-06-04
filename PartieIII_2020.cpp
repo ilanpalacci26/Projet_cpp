@@ -126,10 +126,6 @@ void qrsym(Matrice *A ,Matrice *Q){
   (*Q) = Matrice::Identity(n) ;
 //etape code donné en anexe
   for ( int k = 1 ; k<((n-2)+1) ; k++){
-    std::cout<<"\nPremiere boucle for k<n-2.." ;
-    std::cout<<"MATRICE A PUIS Q debut boucle for " ;
-    (*A).affiche() ;
-    (*Q).affiche() ;
     a = ((*A).transpose()).submat(k,k,k+1,n)[1] ;
     v = householder(a,&beta ) ;
     p = ( (*A).submat(k+1,n,k+1,n) ).mvprod(v)*beta ;
@@ -145,9 +141,6 @@ void qrsym(Matrice *A ,Matrice *Q){
     // //copie de la sous matrice
     (*A).copiesousmatricecarre(TMPA,k+1) ;
     (*Q).copiesousmatricecarre(TMPQ,k+1) ;
-    std::cout<<"\nMATRICE A PUIS Q fin boucle for " ;
-    (*A).affiche() ;
-    (*Q).affiche() ;
 
   }
  for (int j = n ; j>0 ; j-- ){
@@ -164,7 +157,6 @@ void qrsym(Matrice *A ,Matrice *Q){
  //diagonalisation de T et mise a jour de Q
 verifDiag = 1 ;
  while(verifDiag!=0){
-     std::cout<<"Premiere boucle while.." ;
    for(int i = 1 ; i< ((n-1)+1) ; i++ ){
      //gestion des erreur numeriques ,
       if( (abs(T[i][i+1]) + abs(T[i+1][i]) )<= pow(10,-9)*(abs(T[i][i]) + abs(T[i+1][i+1])) ){
@@ -208,7 +200,6 @@ verifDiag = 1 ;
 
     int t3n = p+1 ;
     int t3p = n-q ;
-    std::cout<<"\ndim de T2   t3n,p"<<t3n<<""<<t3p<<"n , p"<<q << p ;
     // si p = 0 on ajuste les borne de T3 et on affiche pas T
     if(p!=0){
       // T1 = T.submat(1,p,1,p) ;
@@ -225,10 +216,7 @@ verifDiag = 1 ;
       T2 = T.submat(t3n,t3p,t3n,t3p) ;
     }
     else{T2 = Matrice(0) ; }
-    std::cout<<" T " ;
-    T.affiche() ;
-    std::cout<<" T2 " ;
-    T2.affiche() ;
+
 
 //erreur numeriques ;
 
@@ -238,23 +226,17 @@ verifDiag = 1 ;
       Tchap = T ;
       Z = reductridiag(&T2) ;
       Tchap.copiesousmatricecarre(T2,t3n) ;
-      std::cout<<" Tchap " ;
-      Tchap.affiche() ;
+
       T = (0.5)*(Tchap + Tchap.transpose()) ;
-      std::cout<<" T apres affectation tcahp + tchatT ) /2" ;
-      Tchap.affiche() ;
+
       IZI = Matrice::Identity(n) ;
-      std::cout<<" Matrice Z" ;
-      Z.affiche() ;
+
       IZI.copiesousmatricecarre(Z,p+1) ;
-      std::cout<<" Matrice Q avant affectation" ;
-      Q->affiche() ;
+
       *Q = (*Q)*IZI ;
-      std::cout<<" Matrice Q apres affectation" ;
-      Q->affiche() ;
+
 
     }
-
     verifDiag = verifdiagonal(T) ;
 
     //ajustement numerique ;
@@ -264,24 +246,103 @@ verifDiag = 1 ;
 }
 
 
-Matrice qrpivot(Matrice A , Matrice *Q){
-  int m = A.dims[0] ;
-  int n = A.dims[1] ;
+Matrice qrpivot(Matrice *A , Matrice *Q){
+  int m = A->dims[0] ;
+  int n = A->dims[1] ;
   int r ;
-  int to =0;
+  float to =0;
+  int k ;
+  float tmp ;
+  Matrice TMP ;
+  Vecteur v ;
+  float beta ;
   Matrice PI = Matrice::Identity(n) ;
-  Vecteur cj ;
-  A.affiche() ;
-  A.submat(1,2,1,1).affiche() ;
+  Vecteur c(n) ;
   for(int j(1) ; j<(n+1) ; j++ ){
-    cj[j] = A.submat(1,m,j,j)[1] ;
+    c[j] = (A->submat(1,m,j,j).transpose()[1]).dot(A->submat(1,m,j,j).transpose()[1]) ;
   }
+
   r=0 ;
-
-  int t =1 ;
-  while(t>0 && r<n){
+  to = vmax(c) ;
+  while((to>0) && (r<n)){
     r++ ;
+    k = vindicemax(c,r,to) ;
+//permutation Mat
+    for(int i = 1 ; i<(m+1) ; i++ ) {
+    //  A->affiche() ;
+      tmp     = (*A)[i][r] ;
+      (*A)[i][r] = (*A)[i][k] ;
+      (*A)[i][k] = tmp ;
+  //    A->affiche() ;
+    }
+  //  c.affiche() ;
+    tmp  = c[r] ;
+    c[r] = c[k] ;
+    c[k] = tmp ;
+//permutation Mat
+    for(int i = 1 ; i<(n+1) ; i++ ) {
+      tmp     = PI[i][r] ;
+      PI[i][r] = PI[i][k] ;
+      PI[i][k] = tmp ;
+    }
+    v = householder((*A).submat(r,m,r,r).transpose()[1],&beta) ;
+    TMP = (*A).submat(r,m,r,n) - beta*Matrice::outer(v,v)*(*A).submat(r,m,r,n) ;
+    (*A).copiesousmatriceLibre(TMP,r,r) ;
+
+    for(int i = (r+1) ; i<(m+1) ; i++ ) {
+      (*A)[i][r] = v.subvec(2,(m-r+1))[i-r] ;
+      std::cout<<r<<"i-r"<<i-r;
+    }
+
+    for (int i = (r+1) ;i<(n+1) ; i++ ){
+      c[i] = c[i] - pow((*A)[r][i],2) ;
+    }
+
+    if(r<n) { to = vmax(c.subvec(r+1,n));  }
+    else{ to = 0 ; }
 
   }
-  return Matrice(2) ;
+
+//calcul de Q
+
+  (*Q) = Matrice::Identity(m) ;
+
+  v = Vecteur(m) ;
+  //cas ou j = n cf notation algo projet
+   for( int j=n ; j>0 ; j-- ){
+      v[j] = 1 ;
+      if(j==m){
+        beta = 2 ;
+        (*Q)[m][m] = (*Q)[m][m] -  beta*v[m]*v[m]*((*Q)[m][m]) ;
+      }
+      else{
+        for(int i = (j+1) ; i<(m+1) ; i++){
+          v[i] = (*A)[i][j] ;
+          beta = 2 / ( 1 + pow( (*A).submat(j+1,m,j,j).norm() , 2) )  ;
+          TMP = (*Q).submat(j,m,j,m) - beta* Matrice::outer( (v.subvec(j,m)),(v.subvec(j,m)) )*( (*Q).submat(j,m,j,m) ) ;
+          std::cout<<" -------------------------------------------";
+          (*Q).copiesousmatriceLibre(TMP,j,j) ;
+           // std::cout<<" TMP j puis m  "<< j << "  " << m ;
+       // (TMP).affiche() ;
+
+      }
+     }
+   }
+  return PI ;
 }
+
+/*
+void svd(Matrice *A,Matrice* U, Matrice* SIGMA, Matrice * V){
+  if((*A).dims[0]>=(*A).dims[1]){Matrice AtA = (*A).transpose()*(*A) ;
+  Matrice Q1 = AtA ;
+  Matrice Q2 = (*A)*Q1 ;
+  qrsym(&AtA,&Q1);
+  Matrice PI = qrpivot(A,&Q2);
+  *SIGMA = Q2.transpose()*(*A)*Q1*PI ;
+
+}
+
+  *U = Q2 ;
+  *V = Q1*PI ;
+}
+*/

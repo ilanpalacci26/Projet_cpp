@@ -24,8 +24,9 @@ public:
 
   friend class Matrice ;
 
-  friend Vecteur householder(Vecteur x , float* beta ) ;
+  friend Vecteur householder(Vecteur  , float*  ) ;
 
-  friend float vmax(Vecteur v) ; 
+  friend float vmax(Vecteur ) ;
+  friend int vindicemax(Vecteur ,int , float ) ;
 
 } ;

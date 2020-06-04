@@ -207,6 +207,16 @@ void Matrice::copiesousmatricecarre(Matrice A,int k){
 
 }
 
+void Matrice::copiesousmatriceLibre(Matrice A,int l,int k ){
+   // (k-1) lorsqu'on travaille avec la matrice mat
+  if(A.dims[0]==0){return ; } // On ne fait rien si A est nul
+  for(int i1 = 0 ; i1<(A.dims[0]) ; i1++) {
+    for(int j1 = 0 ; j1<(A.dims[1]);j1++) {
+      mat[i1+l-1][j1+k] = A[i1+1][j1+1] ;
+    }
+  }
+}
+
 Matrice Matrice::Identity(int n) {
   Matrice I(n,n) ;
   for( int i = 0 ; i<n ; i++){

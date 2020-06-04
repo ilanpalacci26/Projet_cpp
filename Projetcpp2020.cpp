@@ -159,9 +159,18 @@ float Vecteur::norm(){
 }
 float vmax(Vecteur v){
   float max = v[1] ;
-  for(int i =1 ;i<v.dim){
+  for(int i =1 ;i<(v.dim+1) ; i++){
       if(v[i]>max){max=v[i] ; }
     }
 
 return max ;
+}
+
+int vindicemax(Vecteur v,int r, float max){
+  for(int i =r ;i<(v.dim+1) ; i++){
+      if(v[i]==max){
+        return (i) ;
+       }
+    }
+return r ;
 }
