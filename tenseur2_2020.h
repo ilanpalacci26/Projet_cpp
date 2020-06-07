@@ -35,5 +35,7 @@ public:
 
   friend Matrice qrpivot(Matrice * , Matrice *);
   friend float verifdiagonal(Matrice A) ;
-  friend void qrsym(Matrice *A ,Matrice *Q) ; 
+  friend void qrsym(Matrice *A ,Matrice *Q) ;
 } ;
+
+void ErreurNumeric(Matrice * A) ;

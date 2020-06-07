@@ -235,3 +235,13 @@ float verifdiagonal(Matrice A) {
     verif = 0 ; }
   return verif ;
 }
+
+void ErreurNumeric(Matrice * A){
+  for(int i = 1 ; i<(A->dims[0]+1) ; i++){
+    for (int j =1 ; j < (A->dims[1]+1) ; j++){
+      if(abs((*A)[i][j]) < pow(10,-6)){
+        (*A)[i][j]= 0 ; }
+    }
+  }
+  return ;
+}

@@ -81,8 +81,26 @@ A[3][1] = 0 ;
 A[3][2] = 0 ;
 A[3][3] = 1 ;
 Matrice Q(3,3) ;
+Matrice U = Q ;
+Matrice SIGMA = Q ;
+Matrice V = Q ;
+Matrice copie = M ;
+Matrice PI = qrpivot(&copie,&Q) ;
+ErreurNumeric(&Q) ;
+Q.affiche() ;
+PI.affiche() ;
+M.affiche() ;
+Matrice R =  Q.transpose()*M*PI ;
+ErreurNumeric(&R) ;
+R.affiche() ;
 
-qrsym(&A,&Q) ;
+//qrpivot(&M,&Q) ;
+/*svd(&A,&U,&SIGMA,&V) ;
+A.affiche() ;
+U.affiche() ;
+SIGMA.affiche() ;
+V.affiche() ;
+*/
 
  // Matrice copA = A ;
 /*
@@ -90,7 +108,6 @@ qrsym(&A,&Q) ;
 qrsym(&A,&Q) ;
  //A.affiche() ;
 std::cout<<" QTAQ apres algorithme: " ;
-(Q.transpose()*Q).affiche() ;
 std::cout<<" Q apres algorithme: " ;
 Q.affiche() ;
  //Q.affiche() ;
