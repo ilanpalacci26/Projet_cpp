@@ -10,12 +10,13 @@ public:
   Tenseur(int * ,int , Vecteur ) ;
   Tenseur(int * tabd ,int dim, int k, Matrice A ) ;
   ~Tenseur() ;
-  Tenseur(const Tenseur &T) ; 
+  Tenseur(const Tenseur &T) ;
 
 
   friend int phijk(int * tabd ,int dim,int* i,int k) ;
   friend int phi(int * tabd ,int dim,int* i) ;
 } ;
 
-int phijk(int * tabd ,int dim,int* i,int k) ;
-int phi(int * tabd ,int dim,int* i) ;
+int phijk(int * tabd ,int dim,int* indice,int k) ;
+int phi(int * tabd ,int dim,int* indice) ;
+void invphi(int * tabd, int dim,int i, int* indice) ; 

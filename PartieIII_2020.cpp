@@ -332,53 +332,81 @@ Matrice qrpivot(Matrice *A , Matrice *Q){
   return PI ;
 }
 
-void svd(Matrice *A,Matrice* U, Matrice* SIGMA, Matrice * V){
+void svd(Matrice *A,Matrice* DEC){
+
   int m = (*A).dims[0] ;
   int n = (*A).dims[1] ;
+
   if(m>=n){
+
+    Matrice Q1 ;
+    Matrice Q2 ;
+
     Matrice AtA = (*A).transpose()*(*A) ;
-    Matrice Q1 = AtA ;
-    Matrice AQ1 =  (*A)*Q1 ;
-    Matrice Q2 = AQ1 ;
   //application a AtA pour obtenir Q1
     qrsym(&AtA,&Q1);
+    Matrice AQ1 =  (*A)*Q1 ;
+    //Q2 et PI
     Matrice PI = qrpivot(&AQ1,&Q2);
     Matrice R = Q2.transpose()*AQ1*PI ;
+
     for( int j = 1 ; j<(n+1) ; j++){
+
       if(R[j][j] < 0 ){
+
         for (int i = 1 ; i<(m+1) ; i++){
+
           Q2[i][j] = -Q2[i][j] ;
+
         }
+
       }
+
     }
     R = Q2.transpose()*AQ1*PI ;
-    *U = Q1 ;
-    *SIGMA = R ;
-    *V = Q1*PI ;
+    DEC[0] = Q1 ;
+    DEC[1] = R ;
+    DEC[2] = Q1*PI ;
   }
   else{
-    int m = (*A).dims[0] ;
-    int n = (*A).dims[1] ;
-    if(m>=n){
-      Matrice AAt =( (*A).transpose()*(*A) ).transpose();
-      Matrice Q1 = AAt ;
-      Matrice AtQ1 =  (*A).transpose()*Q1 ;
-      Matrice Q2 = AtQ1 ;
+      Matrice Q1  ;
+      Matrice Q2  ;
+
+      Matrice AAt = (*A)*( (*A).transpose() ) ;
     //application a AtA pour obtenir Q1
       qrsym(&AAt,&Q1);
+      Matrice AtQ1 =  ( (*A).transpose() )*Q1 ;
+    // calcule de PI , Q2 ;
       Matrice PI = qrpivot(&AtQ1,&Q2);
-      Matrice R = Q2.transpose()*AtQ1*PI ;
+      Matrice R = Q2.transpose()*( (*A).transpose() )*Q1*PI ;
+    // Matrice R = Q2.transpose()*AtQ1*PI ;
+
       for( int i = 1 ; i<(m+1) ; i++){
+
         if(R[i][i] < 0 ){
+
           for (int j = 1 ; j<(n+1) ; j++){
             Q2[j][i] = -Q2[j][i] ;
+
           }
+
         }
+
       }
-      R = Q2.transpose()*AtQ1*PI ;
-      *U = Q1 ;
-      *SIGMA = R.transpose() ;
-      *V = Q2 ;
+
+       R = Q2.transpose()*( (*A).transpose() )*Q1*PI ;
+      // R = Q2.transpose()*AtQ1*PI ;
+
+      DEC[0] = Q1*PI ;
+      DEC[1] = R.transpose() ;
+      DEC[2] = Q2 ;
+
     }
-  }
+
+
+  ErreurNumeric(&DEC[0]) ;
+  ErreurNumeric(&DEC[1]) ;
+  ErreurNumeric(&DEC[2]) ;
+
+  return ;
 }
